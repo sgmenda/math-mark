@@ -40,5 +40,5 @@ make
 ## Usage
 Write a file in math-mark, and compile it to HTML+MathML using
 ```
-./mml [input file] >[output file]
+./mmd [input file] >[output file]
 ```
