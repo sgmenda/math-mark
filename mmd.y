@@ -43,13 +43,31 @@ char *concatThreeStrings(const char *s1, const char *s2, const char *s3){
     return concatFourStrings("", s1, s2, s3);
 }
 
-char *resolveFunction(const char *func_name, const char *argument) {
+char *argumentFunction(const char *func_name, const char *argument) {
     if (!strcmp(func_name, "\\sqrt")) {
         return concatThreeStrings("<msqrt>", argument, "</msqrt>");
     } else {
-        fprintf(stderr, "Unrecognized function %s\n", func_name);
+        fprintf(stderr, "Unrecognized argument function %s\n", func_name);
         return NULL;
     }
+}
+
+char *argumentlessFunction(const char *func_name){
+    if (!strcmp(func_name, "\\alpha")) {
+        return concatThreeStrings("<mi>","&alpha;","</mi>");
+    } else if (!strcmp(func_name, "\\beta")) {
+        return concatThreeStrings("<mi>","&beta;","</mi>");
+    } else {
+        fprintf(stderr, "Unrecognized argumentless function %s\n", func_name);
+        return NULL;
+    }
+}
+
+char *resolveFunction(const char *func_name, const char *argument) {
+    if (!argument) {
+        return argumentlessFunction(func_name);
+    } 
+    return argumentFunction(func_name, argument);
 }
 
 %}
@@ -139,6 +157,9 @@ math: MATHDIGIT {
 
 mathrow: MATH_LBRACE math MATH_RBRACE {
                     $$ = concatThreeStrings("<mrow>", $2, "</mrow>");
+                }
+        | MATH_LBRACE MATH_RBRACE {
+                    $$ = NULL;
                 }
 
 text: TEXT {$$ = $1;}
